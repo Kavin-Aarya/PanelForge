@@ -1,0 +1,20 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  web:
+    error:
+      include-message: always
+      include-binding-errors: always
+  datasource:
+    url: jdbc:postgresql://localhost:5432/panelforge_registration
+    username: postgres
+    password: ${DB_PASSWORD:}
+jwt:
+  secret:
+    access: ${JWT_ACCESS_SECRET}
+    refresh: ${JWT_REFRESH_SECRET}
+  expiration:
+    access: 900000       # 15 minutes in milliseconds (15 * 60 * 1000)
+    refresh: 604800000   # 7 days in milliseconds (7 * 24 * 60 * 60 * 1000)
