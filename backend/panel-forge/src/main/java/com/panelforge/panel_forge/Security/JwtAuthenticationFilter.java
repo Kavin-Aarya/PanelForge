@@ -55,15 +55,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             jwt = authHeader.substring(7);
             userId= jwtService.extractUserId(jwt);
 
-            // If username is extracted but user isn't authenticated yet in security state context
+            // If userId is extracted but user isn't authenticated yet in security state context
             if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                 AppUser appUser = appUserRepository.findById(userId)
+                AppUser appUser = appUserRepository.findById(userId)
                         .orElseThrow(() -> new UserNameNotFoundException("No user found for id: " + userId));
-                        
+                CustomUserPrincipal principal = new CustomUserPrincipal(appUser);
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        appUser,
+                        principal,
                         null,
-                        Collections.emptyList()
+                        principal.getAuthorities()
                 );
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 
