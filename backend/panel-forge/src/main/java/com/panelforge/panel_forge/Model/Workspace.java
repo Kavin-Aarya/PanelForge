@@ -1,20 +1,18 @@
 package com.panelforge.panel_forge.Model;
 
+import java.util.UUID;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapsId;
 import jakarta.persistence.*;
-import jakarta.persistence.Table;
 
 @Entity
 @Table(name="workspace")
 public class Workspace {
 
     @Id
-    private Long id;
+    
+    private UUID id;
 
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
@@ -28,14 +26,18 @@ public class Workspace {
     private String creatorPlan = "Free Plan";
     private int remainingCredits = 0;
 
+    protected Workspace() {
+        // required by JPA/Hibernate for reflection-based instantiation
+    }
+    
     public Workspace(AppUser appUser) {
         this.appUser=appUser;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return this.id;
     }
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id=id;
     }
     public int getComicsCreated() {

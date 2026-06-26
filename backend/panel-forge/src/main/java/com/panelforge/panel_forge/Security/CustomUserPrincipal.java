@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.UUID;
 
 /**
  * Wraps the AppUser entity as the Spring Security principal.
@@ -27,7 +28,7 @@ public class CustomUserPrincipal implements UserDetails {
         return appUser;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return appUser.getId();
     }
 

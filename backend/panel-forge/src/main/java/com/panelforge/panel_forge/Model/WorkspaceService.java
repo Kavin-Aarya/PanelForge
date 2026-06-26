@@ -1,5 +1,7 @@
 package com.panelforge.panel_forge.Model;
 
+import java.util.UUID;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -22,7 +24,7 @@ public class WorkspaceService {
     public void deductCredits() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserPrincipal principal = (CustomUserPrincipal) authentication.getPrincipal();
-        Long userId = principal.getId();
+        UUID userId = principal.getId();
 
     }
 

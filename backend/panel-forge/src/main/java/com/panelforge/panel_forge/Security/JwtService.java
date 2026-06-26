@@ -12,9 +12,10 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 
 import javax.crypto.SecretKey;
@@ -54,14 +55,14 @@ public class JwtService {
         .compact();
     }
 
-    public Long extractUserId(String token) {
+    public UUID extractUserId(String token) {
         String subject = extractClaim(token, Claims::getSubject, getSignInKey(accessSecret));
-        return Long.valueOf(subject);
+        return UUID.fromString(subject);
     }
 
-    public Long extractRefreshUserId(String token) {
+    public UUID extractRefreshUserId(String token) {
         String subject = extractClaim(token, Claims::getSubject, getSignInKey(refreshSecret));
-        return Long.valueOf(subject);
+        return UUID.fromString(subject);
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver, SecretKey key) {

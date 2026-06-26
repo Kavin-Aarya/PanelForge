@@ -1,7 +1,9 @@
 package com.panelforge.panel_forge.Model;
 
+import java.util.UUID;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface WorkspaceRepository extends JpaRepository<Workspace, Long> {
+public interface WorkspaceRepository extends JpaRepository<Workspace, UUID> {
     
 }

@@ -1,5 +1,7 @@
 package com.panelforge.panel_forge.Model;
 
+import java.util.UUID;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.CollectionTable;
@@ -18,8 +20,8 @@ import jakarta.persistence.Table;
 @Table(name = "ComicDetails")
 public class ComicCreation {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     // Many comics can belong to one user — each comic gets its own
     // auto-generated id; user_id is a plain foreign key column.
@@ -60,10 +62,10 @@ public class ComicCreation {
         this.appUser = appUser;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return this.id;
     }
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id=id;
     }
 

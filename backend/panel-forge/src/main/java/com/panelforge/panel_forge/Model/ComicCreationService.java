@@ -1,5 +1,7 @@
 package com.panelforge.panel_forge.Model;
 
+import java.util.UUID;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -21,11 +23,11 @@ public class ComicCreationService {
     }
 
     @Transactional
-    public Long AddNewComic(ComicCreationRequest comicCreationRequest) {
+    public UUID AddNewComic(ComicCreationRequest comicCreationRequest) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserPrincipal principal = (CustomUserPrincipal) authentication.getPrincipal();
-        Long userId = principal.getId();
+        UUID userId = principal.getId();
 
         AppUser currentUser = appUserRepository.findById(userId)
         .orElseThrow(() -> new RuntimeException("Authenticated user not found."));

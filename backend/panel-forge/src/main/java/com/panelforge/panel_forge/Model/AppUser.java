@@ -1,6 +1,7 @@
 package com.panelforge.panel_forge.Model;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -18,9 +19,9 @@ import jakarta.persistence.OneToOne;
 @Entity
 public class AppUser {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     
-    private Long id;
+    private UUID id;
     
     private String username;
     
@@ -38,10 +39,10 @@ public class AppUser {
     @JsonManagedReference // ◄── Tells Jackson to safely serialize the dashboard data into the User JSON
     private Workspace workspace;
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id=id;
     }
     public String getUsername() {

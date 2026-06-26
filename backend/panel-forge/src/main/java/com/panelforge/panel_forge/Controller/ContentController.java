@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 
@@ -67,7 +68,7 @@ public class ContentController {
         if (refreshToken == null) {
             return ResponseEntity.badRequest().body("Refresh token missing from request body.");
         }
-        Long userId = jwtService.extractRefreshUserId(refreshToken);
+        UUID userId = jwtService.extractRefreshUserId(refreshToken);
         
         if (userId != null) {
             AppUser appUser = appUserRepository.findById(userId)
