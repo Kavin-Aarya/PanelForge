@@ -349,8 +349,46 @@ export default function PageCrafter() {
       const data: ComicResult = await resp.json();
       setResult(data);
       setProgress(100);
-      setProgressLabel("Done!");
+      setProgressLabel("Saving comic book to your account history...");
       setActiveTab("layout");
+
+      const comicPayload = {
+        NumberOfPanels: numPanels,
+        PanelWidth: panelW,
+        PanelHeight: panelH,
+        QualitySteps: quality,
+        GuidanceScale: guidance,
+        GenerateComic: genLayout,
+        SkipComic: skipImages,
+        ComicPrompt: storyIdea,
+        ArtStyle: artStyle,
+        StoryTitle: data.story?.title || "Untitled Comic",
+        Storyline: data.story?.storyline || "",
+        Characters: data.story?.characters ? data.story.characters.join(", ") : "",
+        Moral: data.story?.moral || "",
+        LayoutImage: data.layout_image || null,
+        PanelImages: data.panel_images || []
+      };
+      const token = localStorage.getItem("accessToken");
+      try {
+        const dbResp = await fetch("http://localhost:8080/api/comics/save", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify(comicPayload),
+        });
+
+        if (!dbResp.ok) {
+          const errText = await dbResp.text();
+          console.error("Failed to save comic to account history:", dbResp.status, errText);
+          setError(`Comic generated, but saving to your history failed: ${errText || dbResp.status}`);
+        }
+      } catch (saveErr: any) {
+        console.error("Network error while saving comic:", saveErr);
+        setError("Comic generated, but saving to your history failed due to a network error.");
+      }
     } catch (e: any) {
       stopFakeProgress();
       setError(String(e?.message ?? e));

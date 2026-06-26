@@ -1,32 +1,47 @@
 package com.panelforge.panel_forge.dto;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+
+import java.util.List;
+
 public record ComicCreationRequest(
 
-    @NotBlank(message = "Number of panels is required")
+    @Min(value = 1, message = "Number of panels must be at least 1")
     int NumberOfPanels,
 
-    @NotBlank(message = "Panel Width is required")
+    @Min(value = 1, message = "Panel width must be greater than zero")
     int PanelWidth,
 
-    @NotBlank(message = "Panel Height is required")
+    @Min(value = 1, message = "Panel height must be greater than zero")
     int PanelHeight,
 
-    @NotBlank(message = "Quality Steps is required")
+    @Min(value = 1, message = "Quality steps must be greater than zero")
     int QualitySteps,
 
-    @NotBlank(message = "Guidance Scale is required")
+    @Min(value = 1, message = "Guidance scale must be greater than zero")
     int GuidanceScale,
 
-    @NotBlank(message = "")
     boolean GenerateComic,
 
-    @NotBlank(message = "")
     boolean SkipComic,
 
     @NotBlank(message = "Comic Generation Prompt is required")
     String ComicPrompt,
 
     @NotBlank(message = "Comic Generation Art Style is required")
-    String ArtStyle
+    String ArtStyle,
+
+    String StoryTitle,
+
+    String Storyline,
+
+    String Characters,
+
+    String Moral,
+
+    String LayoutImage,
+    
+    List<String> PanelImages
 
 ) {}

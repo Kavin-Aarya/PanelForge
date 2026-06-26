@@ -43,6 +43,13 @@ public class ComicCreationService {
         newComic.setComicPrompt(comicCreationRequest.ComicPrompt());
         newComic.setArtStyle(comicCreationRequest.ArtStyle());
 
+        newComic.setStoryTitle(comicCreationRequest.StoryTitle());
+        newComic.setStoryline(comicCreationRequest.Storyline());
+        newComic.setCharacters(comicCreationRequest.Characters());
+        newComic.setMoral(comicCreationRequest.Moral());
+        newComic.setLayoutImage(comicCreationRequest.LayoutImage());
+        newComic.setPanelImages(comicCreationRequest.PanelImages());
+
         ComicCreation savedComic = comicCreationRepository.save(newComic);
         return savedComic.getId();
     }
