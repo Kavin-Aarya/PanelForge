@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { authedFetch } from "./api"; // adjust path to match where api.ts lives in your project
 
 /* ─── Design tokens (inline to keep the file self-contained) ──────────────── */
 const C = {
@@ -369,14 +370,16 @@ export default function PageCrafter() {
         LayoutImage: data.layout_image || null,
         PanelImages: data.panel_images || []
       };
-      const token = localStorage.getItem("accessToken");
+
+      // NOTE: previously this grabbed the access token once here and sent a
+      // single fetch with no retry. Comic generation can take 5-30 minutes,
+      // so the token grabbed at page-load time is often expired by the time
+      // we get here. authedFetch attaches the current token, and on a 401
+      // it transparently refreshes via /api/auth/refresh and retries once —
+      // see lib/api.ts.
       try {
-        const dbResp = await fetch("http://localhost:8080/api/comics/save", {
+        const dbResp = await authedFetch("http://localhost:8080/api/comics/save", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-          },
           body: JSON.stringify(comicPayload),
         });
 
@@ -387,7 +390,7 @@ export default function PageCrafter() {
         }
       } catch (saveErr: any) {
         console.error("Network error while saving comic:", saveErr);
-        setError("Comic generated, but saving to your history failed due to a network error.");
+        setError(saveErr?.message ?? "Comic generated, but saving to your history failed due to a network error.");
       }
     } catch (e: any) {
       stopFakeProgress();

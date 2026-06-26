@@ -4,6 +4,8 @@ import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +41,23 @@ public class ComicCreationController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
         
+    }
+    @GetMapping("/mine")
+    public ResponseEntity<?> getMyComics() {
+        try {
+            return ResponseEntity.ok(comicCreationService.getUserComics());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getComicDetail(@PathVariable UUID id) {
+        try {
+            return ResponseEntity.ok(comicCreationService.getComicDetail(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
     
     

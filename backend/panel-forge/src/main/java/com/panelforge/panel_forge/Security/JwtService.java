@@ -32,7 +32,7 @@ public class JwtService {
     private String refreshSecret;
 
     // 15 minutes for access tokens
-    private static final long ACCESS_TOKEN_EXPIRATION = 1000 * 60 * 15;
+    private static final long ACCESS_TOKEN_EXPIRATION = 1000 * 60 * 60;
 
     // 7 days for refresh tokens
     private static final long REFRESH_TOKEN_EXPIRATION = 1000 * 60 * 60 * 24 * 7;
