@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.panelforge.panel_forge.Model.AppUser;
 import com.panelforge.panel_forge.Security.CustomUserPrincipal;
 
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

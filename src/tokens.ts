@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 /* ═══════════════════════════════════════════════════════════════════
    DESIGN TOKENS — PanelForge editorial dark palette + gold
@@ -122,7 +122,7 @@ export const TEMPLATES = [
 ];
 
 export const PAGE_META: Record<string, { title: string; sub: string }> = {
-  dashboard: { title:"Dashboard",     sub:"Welcome back, Jamie. Let's create." },
+  dashboard: { title:"Dashboard",     sub:"Welcome back! Let's create." },
   crafter:   { title:"Comic Crafter", sub:"Generate stories & visuals powered by AI." },
   history:   { title:"History",       sub:"All your previously generated comics." },
   gallery:   { title:"Gallery",       sub:"Published and favourite comic pages." },

@@ -386,7 +386,6 @@ export default function AuthPage() {
           transition={{ delay: 1.8, duration: 1 }}
         >
           <div className="w-px h-11" style={{ background: "rgba(184,169,154,0.18)" }} />
-          <span className="auth-side-label">AI Comic Authoring Platform</span>
         </motion.div>
 
         {/* Bottom editorial copy */}

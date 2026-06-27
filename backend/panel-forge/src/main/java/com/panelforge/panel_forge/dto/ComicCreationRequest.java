@@ -19,7 +19,7 @@ public record ComicCreationRequest(
     @Min(value = 1, message = "Quality steps must be greater than zero")
     int QualitySteps,
 
-    @Min(value = 1, message = "Guidance scale must be greater than zero")
+    @Min(value = 0, message = "Guidance scale must be greater than zero")
     int GuidanceScale,
 
     boolean GenerateComic,

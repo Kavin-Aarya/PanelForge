@@ -11,7 +11,6 @@ import jakarta.persistence.*;
 public class Workspace {
 
     @Id
-    
     private UUID id;
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -24,7 +23,7 @@ public class Workspace {
     private int panelsGenerated = 0;
     private double avgQuality = 0.00;
     private String creatorPlan = "Free Plan";
-    private int remainingCredits = 0;
+    private int remainingCredits = 250;
 
     protected Workspace() {
         // required by JPA/Hibernate for reflection-based instantiation

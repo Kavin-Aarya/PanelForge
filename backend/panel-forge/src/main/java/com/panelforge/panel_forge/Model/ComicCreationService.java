@@ -19,10 +19,12 @@ public class ComicCreationService {
 
     private final ComicCreationRepository comicCreationRepository;
     private final AppUserRepository appUserRepository;
+    private final WorkspaceService workspaceService;
 
-    public ComicCreationService (ComicCreationRepository comicCreationRepository, AppUserRepository appUserRepository) {
+    public ComicCreationService (ComicCreationRepository comicCreationRepository, AppUserRepository appUserRepository, WorkspaceService workspaceService) {
         this.comicCreationRepository=comicCreationRepository;
         this.appUserRepository=appUserRepository;
+        this.workspaceService=workspaceService;
     }
 
     @Transactional
@@ -56,6 +58,9 @@ public class ComicCreationService {
         newComic.setPanelImages(comicCreationRequest.PanelImages());
 
         ComicCreation savedComic = comicCreationRepository.save(newComic);
+        workspaceService.deductCredits(userId, comicCreationRequest);
+
+
         return savedComic.getId();
     }
 

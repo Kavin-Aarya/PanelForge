@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { C, SANS, SERIF, DISPLAY, NAV_ITEMS, BOTTOM_NAV, glass, glassGold } from "./tokens";
 import { Icon, GoldLine } from "./components";
+import { authedFetch } from "./api";
 
 /* ═══════════════════════════════════════════════════════════════════
    SIDEBAR — Collapsible navigation panel with gold accents
@@ -29,12 +30,7 @@ export default function Sidebar({ active, setActive }: SidebarProps) {
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const token = localStorage.getItem("accessToken");
-
-        const response = await fetch("/api/settings/user", {method: "GET", headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        }});
+        const response = await authedFetch("/api/settings/user");
 
         if (!response.ok) {
           throw new Error(`Server returned status: ${response.status}`);
