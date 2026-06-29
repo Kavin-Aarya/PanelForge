@@ -15,6 +15,13 @@ interface UserData {
   name: string;
 }
 
+interface changePasswordData {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+
+}
+
 const SETTINGS_SECTIONS = [
   { id: "profile",       label: "Profile" },
   { id: "generation",    label: "Generation" },
@@ -31,6 +38,42 @@ export default function PageSettings() {
   const [emailNotifs, setEn]          = useState(true);
   const [userDetails, setUserDetails] = useState<UserData | null>(null);
   const [error, setError]             = useState<string | null>(null);
+
+  // Change password state
+  const [pwOpen, setPwOpen]           = useState(false);
+  const [pwCurrent, setPwCurrent]     = useState("");
+  const [pwNew, setPwNew]             = useState("");
+  const [pwConfirm, setPwConfirm]     = useState("");
+  const [pwError, setPwError]         = useState<string | null>(null);
+  const [pwSuccess, setPwSuccess]     = useState(false);
+  const [pwLoading, setPwLoading]     = useState(false);
+
+  const handleChangePassword = async () => {
+    setPwError(null);
+    setPwSuccess(false);
+    setPwLoading(true);
+    try {
+      const token = localStorage.getItem("accessToken");
+      const response = await fetch(`/api/auth/changePassword`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+        body: JSON.stringify({ currentPassword: pwCurrent, newPassword: pwNew, confirmPassword: pwConfirm}),
+      });
+      if (!response.ok) {
+        throw new Error(`Server error ${response.status}`);
+      }
+      const body = await response.json().catch(() => ({}));
+      const data: changePasswordData = JSON.parse(body);
+
+      setPwSuccess(true);
+      setPwCurrent(data.currentPassword); setPwNew(data.newPassword); setPwConfirm(data.confirmPassword);
+      setTimeout(() => { setPwOpen(false); setPwSuccess(false); }, 2000);
+    } catch (err: any) {
+      setPwError(err.message || "Failed to update password.");
+    } finally {
+      setPwLoading(false);
+    }
+  };
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -233,6 +276,81 @@ export default function PageSettings() {
                   }}>Upgrade Plan</button>
                 </div>
               </div>
+              {/* Change Password */}
+              <div style={{ borderBottom: `1px solid ${C.glassBorder}`, paddingBottom: "1.2rem", marginBottom: "1.2rem" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <div>
+                    <p style={{ fontFamily: SANS, fontSize: 13, color: C.main, fontWeight: 500 }}>Change Password</p>
+                    <p style={{ fontFamily: SANS, fontSize: 11, color: C.muted, marginTop: 2, fontWeight: 300 }}>Update your login password</p>
+                  </div>
+                  <button
+                    onClick={() => { setPwOpen(o => !o); setPwError(null); setPwSuccess(false); }}
+                    style={{
+                      padding: "5px 14px", borderRadius: 4, fontFamily: SANS, fontSize: 10,
+                      letterSpacing: "0.15em", textTransform: "uppercase",
+                      color: pwOpen ? C.gold : C.muted,
+                      border: `1px solid ${pwOpen ? C.goldBorder : C.glassBorder}`,
+                      background: pwOpen ? C.goldDim : "transparent",
+                      cursor: "pointer", transition: "all .18s",
+                    }}
+                  >{pwOpen ? "Cancel" : "Change ↓"}</button>
+                </div>
+
+                <AnimatePresence>
+                  {pwOpen && (
+                    <motion.div
+                      key="pw-form"
+                      initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                      animate={{ opacity: 1, height: "auto", marginTop: "1.2rem" }}
+                      exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                      transition={{ duration: 0.22 }}
+                      style={{ overflow: "hidden" }}
+                    >
+                      <div style={{ display: "flex", flexDirection: "column", gap: "0.9rem", padding: "1.2rem", borderRadius: 8, ...glass(0.04, 12) }}>
+                        {[
+                          { label: "Current password",     value: pwCurrent, set: setPwCurrent },
+                          { label: "New password",         value: pwNew,     set: setPwNew     },
+                          { label: "Confirm new password", value: pwConfirm, set: setPwConfirm },
+                        ].map(f => (
+                          <div key={f.label}>
+                            <label style={{ fontFamily: SANS, fontSize: 9, letterSpacing: "0.22em", textTransform: "uppercase", color: C.goldText, fontWeight: 700, display: "block", marginBottom: "0.35rem" }}>{f.label}</label>
+                            <input
+                              type="password"
+                              value={f.value}
+                              onChange={e => f.set(e.target.value)}
+                              style={{ width: "100%", boxSizing: "border-box", borderRadius: 7, padding: "0.65rem 0.9rem", fontFamily: SANS, fontSize: 13, color: C.main, outline: "none", transition: "all .2s", ...glass(0.04, 12) }}
+                              onFocus={e => { e.currentTarget.style.borderColor = C.goldBorder; }}
+                              onBlur={e => { e.currentTarget.style.borderColor = C.glassBorder; }}
+                            />
+                          </div>
+                        ))}
+
+                        {pwError && (
+                          <p style={{ fontFamily: SANS, fontSize: 11, color: "#ff8888", background: "rgba(230,80,80,0.1)", border: "1px solid rgba(230,80,80,0.25)", borderRadius: 5, padding: "0.5rem 0.75rem" }}>{pwError}</p>
+                        )}
+                        {pwSuccess && (
+                          <p style={{ fontFamily: SANS, fontSize: 11, color: "#88dd99", background: "rgba(80,200,100,0.1)", border: "1px solid rgba(80,200,100,0.25)", borderRadius: 5, padding: "0.5rem 0.75rem" }}>Password updated successfully.</p>
+                        )}
+
+                        <button
+                          onClick={handleChangePassword}
+                          disabled={pwLoading}
+                          style={{
+                            padding: "0.65rem 1.5rem", borderRadius: 7, fontFamily: SANS, fontSize: 10,
+                            letterSpacing: "0.2em", textTransform: "uppercase", fontWeight: 700,
+                            color: C.bg, border: "none", cursor: pwLoading ? "not-allowed" : "pointer",
+                            opacity: pwLoading ? 0.6 : 1,
+                            background: `linear-gradient(135deg,${C.gold},#e8c05a)`,
+                            boxShadow: `0 2px 12px ${C.gold}33`,
+                            alignSelf: "flex-start", transition: "opacity .18s",
+                          }}
+                        >{pwLoading ? "Saving…" : "Update Password"}</button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
               <SettingsRow label="Download All Data" desc="Export all your projects, stories and panel images">
                 <button style={{ padding: "5px 14px", borderRadius: 4, fontFamily: SANS, fontSize: 10, letterSpacing: "0.15em", textTransform: "uppercase", color: C.muted, cursor: "pointer", ...glass(0.04, 12) }}>Export ↓</button>
               </SettingsRow>
