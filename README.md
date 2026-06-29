@@ -162,3 +162,4 @@ This is an actively evolving personal project — a few things are intentionally
 ## License
 
 Not yet decided — personal project, all rights reserved for now.
+
